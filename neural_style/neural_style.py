@@ -54,11 +54,12 @@ def train(args):
     style = utils.preprocess_batch(style)
     if args.cuda:
         style = style.cuda()
-        
+
     style.to(device)
 
     with torch.no_grad():
         style_v = Variable(style, volatile=True)
+        style_v.to(device)
         style_v = utils.subtract_imagenet_mean_batch(style_v)
         features_style = vgg(style_v)
         gram_style = [utils.gram_matrix(y) for y in features_style]
