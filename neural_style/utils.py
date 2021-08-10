@@ -53,7 +53,7 @@ def subtract_imagenet_mean_batch(batch, cuda):
     if cuda:
         mean.cuda()
         mean.to('cuda')
-    batch = batch.sub(Variable(mean))
+    batch = batch.sub(mean)
     return batch
 
 
