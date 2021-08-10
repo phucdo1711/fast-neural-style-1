@@ -16,7 +16,11 @@ def tensor_load_rgbimage(filename, size=None, scale=None):
     elif scale is not None:
         img = img.resize((int(img.size[0] / scale), int(img.size[1] / scale)), Image.ANTIALIAS)
     img = np.array(img).transpose(2, 0, 1)
-    img = torch.from_numpy(img).float()
+    if torch.cuda.is_available():
+        img = torch.from_numpy(img).cuda().float()
+    else :
+        img = torch.from_numpy(img).float()
+
     return img
 
 
@@ -46,7 +50,6 @@ def gram_matrix(y):
 
 def subtract_imagenet_mean_batch(batch):
     tensortype = type(batch.data)
-    print(tensortype)
     mean = tensortype(batch.data.size())
     mean[:, 0, :, :] = 103.939
     mean[:, 1, :, :] = 116.779
