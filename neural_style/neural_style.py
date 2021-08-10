@@ -40,6 +40,7 @@ def train(args):
     vgg = Vgg16()
     utils.init_vgg16(args.vgg_model_dir)
     vgg.load_state_dict(torch.load(os.path.join(args.vgg_model_dir, "vgg16.weight")))
+    device = torch.device("cuda" if args.cuda else "cpu")
 
     if args.cuda:
         transformer.cuda()
@@ -53,11 +54,12 @@ def train(args):
     style = utils.preprocess_batch(style)
     if args.cuda:
         style = style.cuda()
-        style.to('cuda')
+        
+    style.to(device)
 
     with torch.no_grad():
         style_v = Variable(style, volatile=True)
-        style_v = utils.subtract_imagenet_mean_batch(style_v,args.cuda)
+        style_v = utils.subtract_imagenet_mean_batch(style_v)
         features_style = vgg(style_v)
         gram_style = [utils.gram_matrix(y) for y in features_style]
 
@@ -78,8 +80,8 @@ def train(args):
 
                 xc = Variable(x.data.clone(), volatile=True)
 
-                y = utils.subtract_imagenet_mean_batch(y, args.cuda)
-                xc = utils.subtract_imagenet_mean_batch(xc, args.cuda)
+                y = utils.subtract_imagenet_mean_batch(y)
+                xc = utils.subtract_imagenet_mean_batch(xc)
 
                 features_y = vgg(y)
                 features_xc = vgg(xc)
