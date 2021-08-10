@@ -46,6 +46,7 @@ def gram_matrix(y):
 
 def subtract_imagenet_mean_batch(batch):
     tensortype = type(batch.data)
+    print(tensortype)
     mean = tensortype(batch.data.size())
     mean[:, 0, :, :] = 103.939
     mean[:, 1, :, :] = 116.779
