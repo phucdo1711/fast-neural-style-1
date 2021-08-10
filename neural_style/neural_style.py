@@ -43,7 +43,10 @@ def train(args):
 
     if args.cuda:
         transformer.cuda()
+        transformer.to('cuda')
         vgg.cuda()
+    else :
+        transformer.to('cpu')
 
     style = utils.tensor_load_rgbimage(args.style_image, size=args.style_size)
     style = style.repeat(args.batch_size, 1, 1, 1)
