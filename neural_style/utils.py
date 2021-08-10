@@ -47,11 +47,12 @@ def gram_matrix(y):
 def subtract_imagenet_mean_batch(batch, cuda):
     tensortype = type(batch.data)
     mean = tensortype(batch.data.size())
-    if cuda:
-        mean.cuda()
     mean[:, 0, :, :] = 103.939
     mean[:, 1, :, :] = 116.779
     mean[:, 2, :, :] = 123.680
+    if cuda:
+        mean.cuda()
+        mean.to('cuda')
     batch = batch.sub(Variable(mean))
     return batch
 
