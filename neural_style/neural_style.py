@@ -16,6 +16,8 @@ import utils
 from transformer_net import TransformerNet
 from vgg import Vgg16
 
+torch.cuda.empty_cache()
+
 
 def check_paths(args):
     try:
