@@ -57,10 +57,7 @@ def train(args):
 
     with torch.no_grad():
         style_v = Variable(style, volatile=True)
-        if args.cuda:
-            style_v = style_v.cuda()
-            style_v.to('cuda')
-        style_v = utils.subtract_imagenet_mean_batch(style_v)
+        style_v = utils.subtract_imagenet_mean_batch(style_v,args.cuda)
         features_style = vgg(style_v)
         gram_style = [utils.gram_matrix(y) for y in features_style]
 
@@ -81,8 +78,8 @@ def train(args):
 
                 xc = Variable(x.data.clone(), volatile=True)
 
-                y = utils.subtract_imagenet_mean_batch(y)
-                xc = utils.subtract_imagenet_mean_batch(xc)
+                y = utils.subtract_imagenet_mean_batch(y, args.cuda)
+                xc = utils.subtract_imagenet_mean_batch(xc, args.cuda)
 
                 features_y = vgg(y)
                 features_xc = vgg(xc)
